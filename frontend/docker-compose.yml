@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+ frontend:
+   build:
+     context: .
+     dockerfile: Dockerfile
+   ports:
+     - "3000:3000"
+   environment:
+     - NODE_ENV=production
+     - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+   restart: always
+   networks:
+     - book-network
+
+networks:
+ book-network:
+   driver: bridge
