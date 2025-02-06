@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: artifactory.wdc.com:6642/frontend:1.5
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    restart: always
+    networks:
+      - book-network
+
+  backend:
+    build: ./BookAPI
+    image: artifactory.wdc.com:6642/backend:1.4
+    ports:
+      - "8282:8282"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://spring_book_db:5432/springbookdb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - spring_book_db
+    networks:
+      - book-network
+
+  spring_book_db:
+    image: postgres:16
+    container_name: spring_book_db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=springbookdb
+    ports:
+      - "5436:5432"
+    networks:
+      - book-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  spring_book_pgadmin:
+    image: dpage/pgadmin4
+    container_name: spring_book_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8086:80"
+    depends_on:
+      - spring_book_db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - book-network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  book-network:
+    driver: bridge

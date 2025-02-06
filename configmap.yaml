@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: gogreen-app
+data:
+  SPRING_PROFILES_ACTIVE: prod
+  SPRING_DATASOURCE_URL: jdbc:postgresql://spring-book-db-service:5432/springbookdb
+  NEXT_PUBLIC_API_URL: http://backend-service:8282
