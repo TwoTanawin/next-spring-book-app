@@ -5,7 +5,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: artifactory.wdc.com:6642/frontend:1.5
+    image: spring_book_frontend:1.0
+    container_name: spring_book_frontend
     ports:
       - "3000:3000"
     environment:
@@ -16,8 +17,11 @@ services:
       - book-network
 
   backend:
-    build: ./BookAPI
-    image: artifactory.wdc.com:6642/backend:1.4
+    build: 
+        context: ./BookAPI
+        dockerfile: Dockerfile
+    image: spring_book_backend:1.0
+    container_name: spring_book_backend
     ports:
       - "8282:8282"
     environment:
