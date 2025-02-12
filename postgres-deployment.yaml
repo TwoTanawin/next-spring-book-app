@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spring-book-db
-  namespace: gogreen-app
+  namespace: spring-book
 spec:
   replicas: 1
   selector:
@@ -38,3 +38,42 @@ spec:
       - name: postgres-storage
         persistentVolumeClaim:
           claimName: postgres-pvc
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  namespace: spring-book
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: spring-book
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-book-db-service
+  namespace: spring-book
+spec:
+  selector:
+    app: spring-book-db
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP

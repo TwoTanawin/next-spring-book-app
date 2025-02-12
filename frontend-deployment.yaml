@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: gogreen-app
+  namespace: spring-book
 spec:
   replicas: 1
   selector:
@@ -15,12 +15,19 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: artifactory.wdc.com:6642/frontend:1.5
+        image: twotanawin/frontend:1.0
         ports:
         - containerPort: 3000
-    env:
-      - name: NEXT_PUBLIC_API_URL
-        value: "http://backend-service.gogreen-app.svc.cluster.local:8282"
-        envFrom:
-        - configMapRef:
-            name: app-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: spring-book
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP

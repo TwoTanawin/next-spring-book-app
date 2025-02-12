@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: gogreen-app
+  namespace: spring-book
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: artifactory.wdc.com:6642/backend:1.4
+        image: twotanawin/backend:1.0
         ports:
         - containerPort: 8282
         envFrom:
@@ -23,3 +23,16 @@ spec:
             name: app-config
         - secretRef:
             name: app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: spring-book
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 8282
+    targetPort: 8282
+  type: ClusterIP 

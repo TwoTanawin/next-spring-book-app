@@ -5,7 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: spring_book_frontend:1.0
+    image: twotanawin/spring_book_frontend:1.0
     container_name: spring_book_frontend
     ports:
       - "3000:3000"
@@ -20,7 +20,7 @@ services:
     build: 
         context: ./BookAPI
         dockerfile: Dockerfile
-    image: spring_book_backend:1.0
+    image: twotanawin/spring_book_backend:1.0
     container_name: spring_book_backend
     ports:
       - "8282:8282"
